@@ -17,3 +17,22 @@ steps:
     echo Add other tasks to build, test, and deploy your project.
     echo See https://aka.ms/yaml
   displayName: 'Run a multi-line script'
+
+  # Add build steps
+- task: UseDotNet@2
+  inputs:
+    packageType: 'sdk'
+    version: '5.x'
+    installationPath: $(Agent.ToolsDirectory)/dotnet
+
+- script: dotnet build --configuration Release
+  displayName: 'Build the project'
+
+# Add deployment step
+- task: AzureWebApp@1
+  inputs:
+    azureSubscription: 'RND-SBX-SSG_SKOMMERA_03'
+    appType: 'webApp'
+    appName: 'Sindhu_POC_DEVOPS'
+    package: '$(System.DefaultWorkingDirectory)/**/*.zip'
+  displayName: 'Deploy to Azure Web App'
