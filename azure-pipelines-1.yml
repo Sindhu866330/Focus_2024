@@ -17,7 +17,7 @@ variables:
   vmImageName: 'ubuntu-latest'
 
   # Environment name
-  environmentName: ''
+  environmentName: 'DevopsPOC1'
 
   # Project root folder. Point to the folder containing manage.py file.
   projectRoot: $(System.DefaultWorkingDirectory)
@@ -76,12 +76,12 @@ stages:
 
           - task: UsePythonVersion@0
             inputs:
-              versionSpec: '$(pythonVersion)'
+              versionSpec: '3.12'
             displayName: 'Use Python version'
 
           - task: AzureWebApp@1
             displayName: 'Deploy Azure Web App : '
             inputs:
-              azureSubscription: $(RND-SBX-SSG_SKOMMERA_03)
-              appName: $(slazsindhupoc02)
+              azureSubscription: RND-SBX-SSG_SKOMMERA_03
+              appName: slazsindhupoc02
               package: $(Pipeline.Workspace)/drop/$(Build.BuildId).zip
