@@ -82,6 +82,6 @@ stages:
           - task: AzureWebApp@1
             displayName: 'Deploy Azure Web App : '
             inputs:
-              azureSubscription: RND-SBX-SSG_SKOMMERA_03
+              azureSubscription: MyFirstPOC
               appName: slazsindhupoc02
               package: $(Pipeline.Workspace)/drop/$(Build.BuildId).zip
