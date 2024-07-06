@@ -29,10 +29,12 @@ steps:
   displayName: 'Build the project'
 
 # Add deployment step
-- task: AzureWebApp@1
+- task: AzureRmWebAppDeployment@4
   inputs:
-    azureSubscription: 'RND-SBX-SSG_SKOMMERA_03'
-    appType: 'webApp'
-    appName: 'Sindhu_POC_DEVOPS'
+    ConnectionType: 'AzureRM'
+    azureSubscription: 'MyFirstPOC'
+    appType: 'webAppLinux'
+    WebAppName: 'slazsindhupoc02'
+    packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
     package: '$(System.DefaultWorkingDirectory)/**/*.zip'
   displayName: 'Deploy to Azure Web App'
