@@ -37,9 +37,6 @@ stages:
       inputs:
         versionSpec: '$(pythonVersion)'
       displayName: 'Use Python $(pythonVersion)'
-   - script: |
-      python -c "print('Hello World')"
-    displayName: 'Print Hello World with Python'
   
     - script: |
         python -m venv antenv
@@ -47,7 +44,7 @@ stages:
         python -m pip install --upgrade pip
         pip install setup
         pip install -r requirements.txt
-      workingDirectory: $(projectRoot)
+        workingDirectory: $(projectRoot)
       displayName: "Install requirements"
 
     - task: ArchiveFiles@2
@@ -81,9 +78,7 @@ stages:
             inputs:
               versionSpec: '$(pythonVersion)'
             displayName: 'Use Python version'
-- script: |
-      python -c "print('Hello World')"
-    displayName: 'Print Hello World with Python'
+
           - task: AzureWebApp@1
             displayName: 'Deploy Azure Web App : slazsindhupoc02'
             inputs:
