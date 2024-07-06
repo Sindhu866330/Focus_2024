@@ -1,0 +1,73 @@
+# azure-pipelines.yml
+
+trigger:
+  branches:
+    include:
+      - 'main'
+
+# Optionally, you can include pull request triggers
+pr:
+  branches:
+    include:
+      - 'main'
+
+jobs:
+- job: Build
+  pool:
+    vmImage: 'ubuntu-latest'
+  
+  steps:
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '3.12'
+      addToPath: true
+  
+  - script: |
+      python -c "print('Hello World')"
+    displayName: 'Print Hello World with Python'
+  
+  - script: |
+      python -m venv myenv
+      source myenv/bin/activate
+      pip install -r requirements.txt
+    displayName: 'Set up Python environment and install dependencies'
+  
+  - script: npm install
+    displayName: 'npm install'
+  
+  - script: npm run build
+    displayName: 'npm run build'
+  
+  - script: npm test
+    displayName: 'npm test'
+  
+  - task: ArchiveFiles@2
+    inputs:
+      rootFolderOrFile: '$(Build.SourcesDirectory)'
+      includeRootFolder: false
+      archiveType: 'zip'
+      archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+      replaceExistingArchive: true
+
+  - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+    artifact: drop
+
+- job: Deploy
+  pool:
+    vmImage: 'ubuntu-latest'
+    dependsOn: Build
+  
+  steps:
+  - download: current
+    artifact: drop
+  
+  - script: |
+      python -c "print('Hello World')"
+    displayName: 'Print Hello World with Python'
+  
+  - task: AzureWebApp@1
+    inputs:
+      azureSubscription: 'MyFirstPOC'
+      appType: 'webAppLinux'
+      appName: 'slazsindhupoc02'
+      package: $(System.ArtifactsDirectory)/drop/$(Build.BuildId).zip
